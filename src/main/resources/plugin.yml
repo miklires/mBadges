@@ -1,0 +1,53 @@
+name: mBadges
+version: ${version}
+main: io.github.miklires.mbadges.MBadgesPlugin
+api-version: '26.2'
+author: miklires
+description: Graphical player badges with ordered equipment slots
+website: https://github.com/miklires/mBadges
+softdepend: [PlaceholderAPI, LuckPerms, Oraxen, ItemsAdder]
+libraries:
+  - com.zaxxer:HikariCP:6.2.1
+  - org.xerial:sqlite-jdbc:3.47.1.0
+  - com.mysql:mysql-connector-j:9.1.0
+  - org.postgresql:postgresql:42.7.5
+
+permissions:
+  mbadge.use:
+    description: Use badge commands
+    default: true
+  mbadge.gui:
+    description: Open the badge collection
+    default: true
+  mbadge.admin:
+    description: Access all mBadges administrative actions
+    default: op
+    children:
+      mbadge.admin.give: true
+      mbadge.admin.take: true
+      mbadge.admin.equip: true
+      mbadge.admin.clear: true
+      mbadge.admin.list: true
+      mbadge.admin.reload: true
+      mbadge.admin.resourcepack: true
+  mbadge.admin.give:
+    description: Give badges to players
+    default: op
+  mbadge.admin.take:
+    description: Remove badges from players
+    default: op
+  mbadge.admin.equip:
+    description: Change another player's equipped badges
+    default: op
+  mbadge.admin.clear:
+    description: Clear another player's equipped badges
+    default: op
+  mbadge.admin.list:
+    description: View another player's badge collection
+    default: op
+  mbadge.admin.reload:
+    description: Reload safe mBadges settings
+    default: op
+  mbadge.admin.resourcepack:
+    description: Rebuild the generated resource pack
+    default: op

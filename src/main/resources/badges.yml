@@ -1,0 +1,18 @@
+config-version: 1
+
+# Add PNG files to plugins/mBadges/badges and register them here.
+# IDs must contain lowercase letters, digits, underscores, or hyphens.
+badges: {}
+
+# Example:
+# badges:
+#   developer:
+#     name: "<aqua>Developer"
+#     description: "Server development team"
+#     texture: developer.png
+#     permission: mbadge.badge.developer
+#     category: staff
+#     priority: 100
+#     hidden: false
+#     enabled: true
+#     temporary: false

@@ -1,0 +1,12 @@
+config-version: 1
+
+title: "<dark_gray>Badge collection"
+size: 54
+page-size: 45
+owned-material: NAME_TAG
+equipped-material: NETHER_STAR
+locked-material: GRAY_DYE
+expired-material: BARRIER
+previous-page-slot: 45
+status-slot: 49
+next-page-slot: 53

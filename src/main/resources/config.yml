@@ -1,0 +1,47 @@
+config-version: 1
+
+language:
+  default: en_US
+  per-player: false
+
+equipment:
+  default-slots: 1
+  max-badges-hard-limit: 10
+  auto-equip-on-give: false
+
+display:
+  separator: "<reset> "
+  trailing-space: true
+  tab-list:
+    enabled: true
+  nametag:
+    enabled: false
+
+expiration:
+  check-interval-seconds: 60
+
+sync:
+  enabled: false
+  polling-interval-seconds: 10
+
+rest-api:
+  enabled: false
+  bind: 127.0.0.1
+  port: 8766
+  token: ""
+  allowed-addresses:
+    - 127.0.0.1
+    - "::1"
+  requests-per-minute: 60
+
+metrics:
+  enabled: true
+  bstats-id: 33353
+
+updates:
+  enabled: true
+  modrinth-project-id: ""
+  interval-hours: 24
+  timeout-millis: 8000
+
+debug: false

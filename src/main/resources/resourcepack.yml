@@ -1,0 +1,24 @@
+config-version: 1
+
+# INTERNAL, ORAXEN, ITEMSADDER, or EXTERNAL
+mode: INTERNAL
+auto-build: true
+source-directory: badges
+output-file: generated/mbadges-resource-pack.zip
+mapping-file: generated/glyphs.yml
+metadata-file: generated/resource-pack.yml
+namespace: mbadges
+glyph-range:
+  start: E000
+  end: F8FF
+font:
+  file: default.json
+  ascent: 8
+  height: 8
+
+delivery:
+  send-on-join: false
+  url: ""
+  required: false
+  prompt: "<yellow>This server uses a badge resource pack."
+  sha1: ""
