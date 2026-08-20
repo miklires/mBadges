@@ -1,13 +1,22 @@
-# mBadges
+<div align="center">
+  <h1>mBadges</h1>
+  <p>Graphical player badges with collections, ordered equipment slots, and a generated resource pack.</p>
 
-Graphical player badges with collections, ordered equipment slots, and a generated resource pack for Minecraft servers.
+  <p>
+    <a href="https://papermc.io/software/paper"><img alt="Paper" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/paper_vector.svg"></a>
+    <a href="https://purpurmc.org"><img alt="Purpur" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/purpur_vector.svg"></a>
+    <a href="https://papermc.io/software/folia"><img alt="Folia" height="56" src="docs/assets/folia-available.png"></a>
+  </p>
 
-<p align="center">
-  <a href="https://papermc.io/software/paper"><img alt="Supported on Paper" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/paper_vector.svg"></a>
-  <a href="https://purpurmc.org"><img alt="Supported on Purpur" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/purpur_vector.svg"></a>
-</p>
+  <p>
+    <a href="https://github.com/miklires/mBadges"><img alt="GitHub" src="https://tr7zw.github.io/uikit/social_buttons_icon/Github-Button-64.png"></a>
+  </p>
 
-Folia is supported and tested separately because the badge set above does not provide a matching Folia asset.
+  <p>
+    <a href="https://bstats.org/plugin/bukkit/mBadges/33353"><img alt="bStats" src="https://img.shields.io/badge/bStats-33353-2F9BE6?style=for-the-badge"></a>
+    <img alt="Java 25" src="https://img.shields.io/badge/Java-25-5382A1?style=for-the-badge">
+  </p>
+</div>
 
 ## What it does
 
@@ -148,6 +157,10 @@ The optional REST service binds to localhost by default, requires a token of at 
 - Chat formatting is exposed through PlaceholderAPI and the Java renderer; mBadges does not replace a chat plugin.
 - Velocity is not required or supported because badges render on the backend server and client resource pack.
 
+## Telemetry and updates
+
+mBadges uses [bStats plugin ID 33353](https://bstats.org/plugin/bukkit/mBadges/33353) for anonymous usage statistics. Disable collection with `metrics.enabled: false`. The update checker can be disabled independently with `updates.enabled: false`; a Modrinth link will be added only after the project exists.
+
 ## Build
 
 ```bash
@@ -159,4 +172,4 @@ Artifacts:
 - `build/libs/mBadges-1.0.0.jar`
 - `api/build/libs/mBadges-API-1.0.0.jar`
 
-The project is licensed under the MIT License. Anonymous metrics are available on [bStats](https://bstats.org/plugin/bukkit/mBadges/33353) and can be disabled in `config.yml`.
+The project is licensed under the MIT License.
