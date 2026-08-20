@@ -77,6 +77,38 @@ public final class BadgeService implements MBadgesApi, AutoCloseable {
         });
     }
 
+    public CompletableFuture<UUID> findPlayer(String input) {
+        try {
+            return CompletableFuture.completedFuture(UUID.fromString(input));
+        } catch (IllegalArgumentException ignored) {
+            Player online = plugin.getServer().getPlayerExact(input);
+            if (online != null) return CompletableFuture.completedFuture(online.getUniqueId());
+            return CompletableFuture.supplyAsync(() -> storage.findPlayer(input), executor);
+        }
+    }
+
+    public CompletableFuture<Integer> reloadConfiguration() {
+        return CompletableFuture.supplyAsync(() -> {
+            plugin.configFiles().reloadSafe();
+            registry.reload();
+            storage.syncDefinitions(registry.all());
+            cache.players().forEach(this::refresh);
+            return registry.all().size();
+        }, executor).whenComplete((value, error) -> {
+            if (error == null) displayUpdater.run();
+        });
+    }
+
+    public CompletableFuture<Long> pollChanges(long since) {
+        return CompletableFuture.supplyAsync(() -> {
+            long cursor = System.currentTimeMillis();
+            storage.changesSince(since).stream().filter(cache.players()::contains).forEach(this::refresh);
+            return cursor;
+        }, executor).whenComplete((value, error) -> {
+            if (error == null) displayUpdater.run();
+        });
+    }
+
     public void unloadPlayer(UUID playerId) {
         cache.remove(playerId);
         playerLocks.remove(playerId);
@@ -126,6 +158,15 @@ public final class BadgeService implements MBadgesApi, AutoCloseable {
 
     public PlayerBadgeSnapshot cached(UUID playerId) {
         return cache.getOrEmpty(playerId);
+    }
+
+    public void enforceAccess(Player player) {
+        PlayerBadgeSnapshot snapshot = cache.getOrEmpty(player.getUniqueId());
+        snapshot.equipped().forEach(equipped -> registry.get(equipped.badgeId()).ifPresent(badge -> {
+            if (!badge.enabled() || (!badge.permission().isBlank() && !player.hasPermission(badge.permission()))) {
+                unequipBadge(player.getUniqueId(), badge.id(), "permission", BadgeOperationReason.PERMISSION);
+            }
+        }));
     }
 
     @Override

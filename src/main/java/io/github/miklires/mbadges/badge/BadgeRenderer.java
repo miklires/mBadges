@@ -21,10 +21,12 @@ public final class BadgeRenderer {
         String separator = plugin.getConfig().getString("display.separator", " ");
         StringBuilder result = new StringBuilder();
         var snapshot = cache.getOrEmpty(playerId);
+        var player = plugin.getServer().getPlayer(playerId);
         for (var equipped : snapshot.equipped()) {
             var badge = registry.get(equipped.badgeId()).orElse(null);
             var owned = snapshot.owned(equipped.badgeId()).orElse(null);
             if (badge == null || owned == null || !badge.enabled() || owned.expired(Instant.now())) continue;
+            if (!badge.permission().isBlank() && (player == null || !player.hasPermission(badge.permission()))) continue;
             if (!result.isEmpty()) result.append(separator);
             result.append(badge.glyphText());
         }
