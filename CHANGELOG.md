@@ -9,3 +9,4 @@
 - SQLite, MySQL, and PostgreSQL storage backends.
 - Collection GUI, player and administrator commands, PlaceholderAPI, Java API, and events.
 - Optional REST API and multi-server polling.
+- English and Russian GUI text, Paper/Purpur/Folia scheduling, config migration, bStats, and update checks.

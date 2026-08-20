@@ -143,20 +143,23 @@ public final class DatabaseStorage implements AutoCloseable {
     }
 
     public boolean give(OwnedBadge badge) {
-        try (Connection connection = connection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO player_badges (player_uuid, badge_id, obtained_at, expires_at, source, metadata, updated_at) "
-                             + "VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-            statement.setString(1, badge.playerId().toString());
-            statement.setString(2, badge.badgeId());
-            statement.setLong(3, badge.obtainedAt().toEpochMilli());
-            if (badge.expiresAt() == null) statement.setNull(4, java.sql.Types.BIGINT);
-            else statement.setLong(4, badge.expiresAt().toEpochMilli());
-            statement.setString(5, badge.source());
-            statement.setString(6, badge.metadata());
-            statement.setLong(7, System.currentTimeMillis());
-            statement.executeUpdate();
+        try (Connection connection = connection()) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO player_badges (player_uuid, badge_id, obtained_at, expires_at, source, metadata, updated_at) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                statement.setString(1, badge.playerId().toString());
+                statement.setString(2, badge.badgeId());
+                statement.setLong(3, badge.obtainedAt().toEpochMilli());
+                if (badge.expiresAt() == null) statement.setNull(4, java.sql.Types.BIGINT);
+                else statement.setLong(4, badge.expiresAt().toEpochMilli());
+                statement.setString(5, badge.source());
+                statement.setString(6, badge.metadata());
+                statement.setLong(7, System.currentTimeMillis());
+                statement.executeUpdate();
+            }
             recordChange(connection, badge.playerId());
+            connection.commit();
             return true;
         } catch (SQLException exception) {
             if (constraint(exception)) return false;
@@ -185,16 +188,19 @@ public final class DatabaseStorage implements AutoCloseable {
     }
 
     public boolean equip(EquippedBadge badge) {
-        try (Connection connection = connection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO equipped_badges (player_uuid, badge_id, slot, equipped_at, updated_at) VALUES (?, ?, ?, ?, ?)")) {
-            statement.setString(1, badge.playerId().toString());
-            statement.setString(2, badge.badgeId());
-            statement.setInt(3, badge.slot());
-            statement.setLong(4, badge.equippedAt().toEpochMilli());
-            statement.setLong(5, System.currentTimeMillis());
-            statement.executeUpdate();
+        try (Connection connection = connection()) {
+            connection.setAutoCommit(false);
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO equipped_badges (player_uuid, badge_id, slot, equipped_at, updated_at) VALUES (?, ?, ?, ?, ?)")) {
+                statement.setString(1, badge.playerId().toString());
+                statement.setString(2, badge.badgeId());
+                statement.setInt(3, badge.slot());
+                statement.setLong(4, badge.equippedAt().toEpochMilli());
+                statement.setLong(5, System.currentTimeMillis());
+                statement.executeUpdate();
+            }
             recordChange(connection, badge.playerId());
+            connection.commit();
             return true;
         } catch (SQLException exception) {
             if (constraint(exception)) return false;
@@ -203,30 +209,30 @@ public final class DatabaseStorage implements AutoCloseable {
     }
 
     public boolean unequip(UUID playerId, String badgeId) {
-        try (Connection connection = connection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "DELETE FROM equipped_badges WHERE player_uuid = ? AND badge_id = ?")) {
-            statement.setString(1, playerId.toString());
-            statement.setString(2, badgeId);
-            int changed = statement.executeUpdate();
+        return transaction(connection -> {
+            int changed;
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM equipped_badges WHERE player_uuid = ? AND badge_id = ?")) {
+                statement.setString(1, playerId.toString());
+                statement.setString(2, badgeId);
+                changed = statement.executeUpdate();
+            }
             if (changed > 0) recordChange(connection, playerId);
             return changed > 0;
-        } catch (SQLException exception) {
-            throw failure("unequip badge", exception);
-        }
+        }, "unequip badge");
     }
 
     public boolean clear(UUID playerId) {
-        try (Connection connection = connection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "DELETE FROM equipped_badges WHERE player_uuid = ?")) {
-            statement.setString(1, playerId.toString());
-            int changed = statement.executeUpdate();
+        return transaction(connection -> {
+            int changed;
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM equipped_badges WHERE player_uuid = ?")) {
+                statement.setString(1, playerId.toString());
+                changed = statement.executeUpdate();
+            }
             if (changed > 0) recordChange(connection, playerId);
             return changed > 0;
-        } catch (SQLException exception) {
-            throw failure("clear equipped badges", exception);
-        }
+        }, "clear equipped badges");
     }
 
     public boolean swapSlots(UUID playerId, int first, int second) {
@@ -244,7 +250,7 @@ public final class DatabaseStorage implements AutoCloseable {
         Set<UUID> result = new HashSet<>();
         try (Connection connection = connection();
              PreparedStatement statement = connection.prepareStatement(
-                     "SELECT DISTINCT player_uuid FROM badge_changes WHERE changed_at > ? AND server_id <> ?")) {
+                     "SELECT DISTINCT player_uuid FROM badge_changes WHERE changed_at >= ? AND server_id <> ?")) {
             statement.setLong(1, timestamp);
             statement.setString(2, serverId);
             try (ResultSet rows = statement.executeQuery()) {

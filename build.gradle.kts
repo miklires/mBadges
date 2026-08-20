@@ -20,7 +20,7 @@ repositories {
 dependencies {
     implementation(project(":api"))
     compileOnly("io.papermc.paper:paper-api:26.2.build.112-stable")
-    compileOnly("me.clip:placeholderapi:2.11.7")
+    compileOnly("me.clip:placeholderapi:2.12.3")
     compileOnly("com.zaxxer:HikariCP:6.2.1")
     compileOnly("org.xerial:sqlite-jdbc:3.47.1.0")
     compileOnly("com.mysql:mysql-connector-j:9.1.0")
@@ -68,7 +68,7 @@ modrinth {
     versionType.set("release")
     uploadFile.set(tasks.shadowJar)
     gameVersions.add("26.2")
-    loaders.addAll("paper", "purpur")
+    loaders.addAll("paper", "purpur", "folia")
     changelog.set(provider { file("CHANGELOG.md").readText() })
     syncBodyFrom.set(file("README.md").readText())
 }

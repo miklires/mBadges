@@ -27,15 +27,22 @@ public final class MessageService {
     }
 
     public Component message(CommandSender sender, String key, Map<String, String> values) {
+        Component content = component(sender, key, values);
+        String language = language(sender);
+        var config = plugin.configFiles().file("lang/" + language + ".yml");
+        String prefix = config.getString("prefix", "");
+        return miniMessage.deserialize(prefix).append(content);
+    }
+
+    public Component component(CommandSender sender, String key, Map<String, String> values) {
         String language = language(sender);
         var config = plugin.configFiles().file("lang/" + language + ".yml");
         String fallback = plugin.configFiles().file("lang/en_US.yml").getString(key, key);
         String value = config.getString(key, fallback);
-        String prefix = config.getString("prefix", "");
         TagResolver[] resolvers = values.entrySet().stream()
                 .map(entry -> Placeholder.unparsed(entry.getKey(), entry.getValue()))
                 .toArray(TagResolver[]::new);
-        return miniMessage.deserialize(prefix + value, resolvers);
+        return miniMessage.deserialize(value, resolvers);
     }
 
     public Component parse(String value, Map<String, String> placeholders) {

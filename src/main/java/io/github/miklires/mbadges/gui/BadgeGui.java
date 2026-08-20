@@ -70,9 +70,9 @@ public final class BadgeGui implements Listener {
         int previous = slot("previous-page-slot", size - 9, size);
         int status = slot("status-slot", size - 5, size);
         int next = slot("next-page-slot", size - 1, size);
-        if (page > 0) inventory.setItem(previous, simple(Material.ARROW, "<yellow>Previous page"));
-        if (page < maxPage) inventory.setItem(next, simple(Material.ARROW, "<yellow>Next page"));
-        inventory.setItem(status, statusItem(snapshot, service.getSlotLimit(player.getUniqueId()), category));
+        if (page > 0) inventory.setItem(previous, simple(player, Material.ARROW, "gui-previous-page"));
+        if (page < maxPage) inventory.setItem(next, simple(player, Material.ARROW, "gui-next-page"));
+        inventory.setItem(status, statusItem(player, snapshot, service.getSlotLimit(player.getUniqueId()), category));
         player.openInventory(inventory);
     }
 
@@ -150,21 +150,22 @@ public final class BadgeGui implements Listener {
         meta.displayName(messages.parse(badge.name(), Map.of()));
         List<Component> lore = new ArrayList<>();
         lore.add(messages.parse("<gray>" + badge.description(), Map.of()));
-        lore.add(messages.parse("<dark_gray>Category: <category>", Map.of("category", badge.category())));
-        String stateText = switch (state) {
-            case EQUIPPED -> "<aqua>Equipped in slot " + snapshot.equipped(badge.id()).map(value -> value.slot()).orElse(0);
-            case OWNED -> "<green>Owned";
-            case EXPIRED -> "<red>Expired";
-            case DISABLED -> "<red>Disabled";
-            case LOCKED -> "<gray>Locked";
+        lore.add(messages.component(player, "gui-category", Map.of("category", badge.category())));
+        String stateKey = switch (state) {
+            case EQUIPPED -> "gui-equipped";
+            case OWNED -> "gui-owned";
+            case EXPIRED -> "gui-expired";
+            case DISABLED -> "gui-disabled";
+            case LOCKED -> "gui-locked";
         };
-        lore.add(messages.parse(stateText, Map.of()));
+        lore.add(messages.component(player, stateKey, Map.of("slot", Integer.toString(
+                snapshot.equipped(badge.id()).map(value -> value.slot()).orElse(0)))));
         if (state == BadgeState.EQUIPPED) {
-            lore.add(messages.parse("<yellow>Left click to unequip", Map.of()));
-            lore.add(messages.parse("<yellow>Right click to move right", Map.of()));
-            lore.add(messages.parse("<yellow>Shift-right click to move left", Map.of()));
+            lore.add(messages.component(player, "gui-click-unequip", Map.of()));
+            lore.add(messages.component(player, "gui-click-right", Map.of()));
+            lore.add(messages.component(player, "gui-click-left", Map.of()));
         } else if (state == BadgeState.OWNED) {
-            lore.add(messages.parse("<yellow>Left click to equip", Map.of()));
+            lore.add(messages.component(player, "gui-click-equip", Map.of()));
         }
         meta.lore(lore);
         meta.getPersistentDataContainer().set(badgeKey, PersistentDataType.STRING, badge.id());
@@ -181,21 +182,23 @@ public final class BadgeGui implements Listener {
         return snapshot.equipped(badge.id()).isPresent() ? BadgeState.EQUIPPED : BadgeState.OWNED;
     }
 
-    private ItemStack statusItem(PlayerBadgeSnapshot snapshot, int slots, String category) {
-        ItemStack item = simple(Material.BOOK, "<yellow>Slots: " + snapshot.equipped().size() + "/" + slots);
+    private ItemStack statusItem(Player player, PlayerBadgeSnapshot snapshot, int slots, String category) {
+        ItemStack item = new ItemStack(Material.BOOK);
         ItemMeta meta = item.getItemMeta();
+        meta.displayName(messages.component(player, "gui-status", Map.of(
+                "used", Integer.toString(snapshot.equipped().size()), "max", Integer.toString(slots))));
         meta.lore(List.of(
-                messages.parse("<gray>Category: <category>", Map.of("category", category)),
-                messages.parse("<yellow>Click to change category", Map.of())
+                messages.component(player, "gui-category", Map.of("category", category)),
+                messages.component(player, "gui-click-category", Map.of())
         ));
         item.setItemMeta(meta);
         return item;
     }
 
-    private ItemStack simple(Material material, String name) {
+    private ItemStack simple(Player player, Material material, String key) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(messages.parse(name, Map.of()));
+        meta.displayName(messages.component(player, key, Map.of()));
         item.setItemMeta(meta);
         return item;
     }

@@ -5,6 +5,7 @@ api-version: '26.2'
 author: miklires
 description: Graphical player badges with ordered equipment slots
 website: https://github.com/miklires/mBadges
+folia-supported: true
 softdepend: [PlaceholderAPI, LuckPerms, Oraxen, ItemsAdder]
 libraries:
   - com.zaxxer:HikariCP:6.2.1

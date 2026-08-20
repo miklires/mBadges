@@ -83,16 +83,18 @@ public final class ConfigFiles {
     }
 
     private void validate() {
-        bounded("equipment.default-slots", 1, 1, hardLimit());
-        bounded("equipment.max-badges-hard-limit", 10, 1, 100);
-        bounded("expiration.check-interval-seconds", 60, 5, 86_400);
-        bounded("sync.polling-interval-seconds", 10, 2, 3_600);
-        bounded("rest-api.port", 8766, 1, 65_535);
-        bounded("rest-api.requests-per-minute", 60, 1, 100_000);
+        boolean changed = bounded("equipment.max-badges-hard-limit", 10, 1, 100);
+        changed |= bounded("equipment.default-slots", 1, 1, hardLimit());
+        changed |= bounded("expiration.check-interval-seconds", 60, 5, 86_400);
+        changed |= bounded("sync.polling-interval-seconds", 10, 2, 3_600);
+        changed |= bounded("rest-api.port", 8766, 1, 65_535);
+        changed |= bounded("rest-api.requests-per-minute", 60, 1, 100_000);
+        if (changed) plugin.saveConfig();
         String type = file("database.yml").getString("type", "sqlite").toLowerCase();
         if (!type.equals("sqlite") && !type.equals("mysql") && !type.equals("postgresql")) {
             plugin.getLogger().warning("invalid database.yml path type: " + type + "; using sqlite");
             file("database.yml").set("type", "sqlite");
+            save("database.yml");
         }
     }
 
@@ -100,12 +102,22 @@ public final class ConfigFiles {
         return Math.max(1, Math.min(100, plugin.getConfig().getInt("equipment.max-badges-hard-limit", 10)));
     }
 
-    private int bounded(String path, int fallback, int min, int max) {
+    private boolean bounded(String path, int fallback, int min, int max) {
         int value = plugin.getConfig().getInt(path, fallback);
         if (value < min || value > max) {
             plugin.getLogger().warning("invalid config.yml path " + path + ": " + value + "; using " + fallback);
-            return fallback;
+            plugin.getConfig().set(path, fallback);
+            return true;
         }
-        return value;
+        return false;
+    }
+
+    private void save(String name) {
+        File target = new File(plugin.getDataFolder(), name.replace('/', File.separatorChar));
+        try {
+            file(name).save(target);
+        } catch (IOException exception) {
+            throw new IllegalStateException("could not save " + name, exception);
+        }
     }
 }
