@@ -40,7 +40,7 @@ metrics:
 
 updates:
   enabled: true
-  modrinth-project-id: ""
+  modrinth-project-id: "mbadges"
   interval-hours: 24
   timeout-millis: 8000
 

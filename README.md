@@ -5,15 +5,17 @@
   <p>
     <a href="https://papermc.io/software/paper"><img alt="Paper" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/paper_vector.svg"></a>
     <a href="https://purpurmc.org"><img alt="Purpur" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/purpur_vector.svg"></a>
-    <a href="https://papermc.io/software/folia"><img alt="Folia" height="56" src="docs/assets/folia-available.png"></a>
+    <a href="https://papermc.io/software/folia"><img alt="Folia" height="56" src="https://raw.githubusercontent.com/miklires/mBadges/main/docs/assets/folia-available.png"></a>
   </p>
 
   <p>
     <a href="https://github.com/miklires/mBadges"><img alt="GitHub" src="https://tr7zw.github.io/uikit/social_buttons_icon/Github-Button-64.png"></a>
+    <a href="https://modrinth.com/project/mbadges"><img alt="Modrinth" src="https://tr7zw.github.io/uikit/social_buttons_icon/Modrinth-Button-64.png"></a>
   </p>
 
   <p>
     <a href="https://bstats.org/plugin/bukkit/mBadges/33353"><img alt="bStats" src="https://img.shields.io/badge/bStats-33353-2F9BE6?style=for-the-badge"></a>
+    <a href="https://github.com/miklires/mBadges/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/miklires/mBadges?style=for-the-badge"></a>
     <img alt="Java 25" src="https://img.shields.io/badge/Java-25-5382A1?style=for-the-badge">
   </p>
 </div>
@@ -78,7 +80,7 @@ delivery:
   sha1: "the-40-character-sha1-from-generated-resource-pack-yml"
 ```
 
-Use `EXTERNAL`, `ORAXEN`, or `ITEMSADDER` mode when another pack pipeline owns font files. In those modes mBadges keeps the glyph map but does not edit third-party configuration or generate its own pack; add the matching bitmap providers to that pipeline yourself. See [Resource pack guide](docs/RESOURCE_PACK.md).
+Use `EXTERNAL`, `ORAXEN`, or `ITEMSADDER` mode when another pack pipeline owns font files. In those modes mBadges keeps the glyph map but does not edit third-party configuration or generate its own pack; add the matching bitmap providers to that pipeline yourself. See the [resource pack guide](https://github.com/miklires/mBadges/blob/main/docs/RESOURCE_PACK.md).
 
 ## Configuration
 
@@ -148,7 +150,7 @@ Empty slots return an empty string. Placeholders use cached data and do not quer
 
 SQLite is the zero-configuration default. For a network, point every server at the same MySQL or PostgreSQL database and enable `sync.enabled`. Polling refreshes cached online players; it does not require Redis or a proxy plugin. Each server must use the same `badges.yml` and glyph map.
 
-The optional REST service binds to localhost by default, requires a token of at least 24 characters, checks an IP allowlist, and rate-limits callers. Keep it behind a firewall or reverse proxy. See [API and REST guide](docs/API.md).
+The optional REST service binds to localhost by default, requires a token of at least 24 characters, checks an IP allowlist, and rate-limits callers. Keep it behind a firewall or reverse proxy. See the [API and REST guide](https://github.com/miklires/mBadges/blob/main/docs/API.md).
 
 ## Compatibility notes
 
@@ -159,7 +161,7 @@ The optional REST service binds to localhost by default, requires a token of at 
 
 ## Telemetry and updates
 
-mBadges uses [bStats plugin ID 33353](https://bstats.org/plugin/bukkit/mBadges/33353) for anonymous usage statistics. Disable collection with `metrics.enabled: false`. The update checker can be disabled independently with `updates.enabled: false`; a Modrinth link will be added only after the project exists.
+mBadges uses [bStats plugin ID 33353](https://bstats.org/plugin/bukkit/mBadges/33353) for anonymous usage statistics. Disable collection with `metrics.enabled: false`. The update checker reads releases from [Modrinth](https://modrinth.com/project/mbadges) and can be disabled independently with `updates.enabled: false`.
 
 ## Build
 
