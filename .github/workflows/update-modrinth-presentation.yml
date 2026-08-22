@@ -32,6 +32,9 @@ jobs:
             categories: ["management", "social", "utility"],
             source_url: "https://github.com/miklires/mBadges",
             issues_url: "https://github.com/miklires/mBadges/issues",
+            wiki_url: "https://miklires.su/wiki/mbadges",
+            discord_url: "https://discord.gg/pes25cnWKy",
+            donation_urls: [{id: "other", platform: "Other", url: "https://miklires.su/support"}],
             license_id: "MIT",
             requested_status: "approved"
           }' > modrinth-project.json
@@ -50,6 +53,33 @@ jobs:
             --header "Content-Type: image/png" \
             --data-binary @docs/assets/mbadges-icon.png \
             "https://api.modrinth.com/v2/project/$MODRINTH_PROJECT_ID/icon?ext=png"
+      - name: Update telemetry disclosure
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT_ID: ${{ secrets.MODRINTH_PROJECT_ID }}
+        run: |
+          jq -n '{set: [{type: "telemetry", consent: "opt_out", data_collected: ["https://bstats.org/docs/server-owners"]}], remove: []}' \
+            | curl --fail-with-body --request PATCH \
+              --header "Authorization: $MODRINTH_TOKEN" \
+              --header "Content-Type: application/json" \
+              --data-binary @- \
+              "https://api.modrinth.com/v3/project/$MODRINTH_PROJECT_ID/disclosures"
+      - name: Add Folia to the released version
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT_ID: ${{ secrets.MODRINTH_PROJECT_ID }}
+        run: |
+          version_id="$(curl --fail-with-body --silent \
+            --header "Authorization: $MODRINTH_TOKEN" \
+            "https://api.modrinth.com/v2/project/$MODRINTH_PROJECT_ID/version" \
+            | jq -r '.[] | select(.version_number == "1.0.0") | .id' | head -n 1)"
+          test -n "$version_id"
+          jq -n '{loaders: ["paper", "purpur", "folia"], game_versions: ["26.2"]}' \
+            | curl --fail-with-body --request PATCH \
+              --header "Authorization: $MODRINTH_TOKEN" \
+              --header "Content-Type: application/json" \
+              --data-binary @- \
+              "https://api.modrinth.com/v2/version/$version_id"
       - name: Verify project metadata
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -58,4 +88,12 @@ jobs:
           curl --fail-with-body --silent \
             --header "Authorization: $MODRINTH_TOKEN" \
             "https://api.modrinth.com/v2/project/$MODRINTH_PROJECT_ID" \
-            | jq '{id, slug, title, status, requested_status, categories, icon_url}'
+            | jq '{id, slug, title, status, requested_status, categories, icon_url, source_url, issues_url, wiki_url, discord_url, donation_urls}'
+          curl --fail-with-body --silent \
+            --header "Authorization: $MODRINTH_TOKEN" \
+            "https://api.modrinth.com/v2/project/$MODRINTH_PROJECT_ID/version" \
+            | jq 'map({id, version_number, game_versions, loaders})'
+          curl --fail-with-body --silent \
+            --header "Authorization: $MODRINTH_TOKEN" \
+            "https://api.modrinth.com/v3/project/$MODRINTH_PROJECT_ID/disclosures" \
+            | jq '.disclosures | map({type, consent, data_collected})'
