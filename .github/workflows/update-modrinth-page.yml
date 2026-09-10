@@ -17,7 +17,7 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           PROJECT_NAME: mBadges
           SUMMARY: 'Graphical player badges with collections, ordered equipment slots, and generated resource packs.'
-          CATEGORIES: '["social","decoration"]'
+          CATEGORIES: '["decoration","social"]'
           ADDITIONAL_CATEGORIES: '["utility"]'
           WIKI_URL: ''
         run: |
