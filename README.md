@@ -32,7 +32,7 @@
 ## Requirements
 
 - Java 25
-- Paper, Purpur, or Folia 26.2
+- Paper, Purpur, or Folia 26.3
 - A way to host the generated resource-pack ZIP when automatic delivery is enabled
 
 PlaceholderAPI, LuckPerms, Oraxen, and ItemsAdder are optional. mBadges also works when none of them are installed.

@@ -1,5 +1,6 @@
 package io.github.miklires.mbadges.command;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.miklires.mbadges.MBadgesPlugin;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -19,7 +20,7 @@ public final class ReadyCommand implements BasicCommand {
     }
 
     @Override
-    public void execute(@NotNull CommandSourceStack source, @NotNull String[] args) {
+    public void execute(@NotNull CommandSourceStack source, @NotNull String[] args) throws CommandSyntaxException {
         BasicCommand command = delegate.get();
         if (!plugin.ready() || command == null) {
             source.getSender().sendPlainMessage("mBadges is still starting.");

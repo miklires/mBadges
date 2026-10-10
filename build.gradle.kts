@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.github.miklires"
-version = "1.0.0"
+version = "1.0.1"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(25))
@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     implementation(project(":api"))
-    compileOnly("io.papermc.paper:paper-api:26.2.build.112-stable")
+    compileOnly("io.papermc.paper:paper-api:26.3.build.169-beta")
     compileOnly("me.clip:placeholderapi:2.12.3")
     compileOnly("com.zaxxer:HikariCP:6.2.1")
     compileOnly("org.xerial:sqlite-jdbc:3.47.1.0")
@@ -67,7 +67,7 @@ modrinth {
     versionName.set("mBadges ${project.version}")
     versionType.set("release")
     uploadFile.set(tasks.shadowJar)
-    gameVersions.add("26.2")
+    gameVersions.add("26.3")
     loaders.addAll("paper", "purpur", "folia")
     changelog.set(provider { file("CHANGELOG.md").readText() })
     syncBodyFrom.set(file("README.md").readText())

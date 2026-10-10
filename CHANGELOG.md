@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1 - 2026-10-10
+
+- Added Minecraft 26.3 compatibility, including the updated checked-exception contract in Paper's command API, and verified the build and tests.
+
 ## 1.0.0
 
 ### Added
