@@ -23,5 +23,5 @@ jobs:
         with:
           name: mbadges-${{ github.sha }}
           path: |
-            build/libs/mBadges-1.0.0.jar
-            api/build/libs/mBadges-API-1.0.0.jar
+            build/libs/mBadges-1.0.1.jar
+            api/build/libs/mBadges-API-1.0.1.jar

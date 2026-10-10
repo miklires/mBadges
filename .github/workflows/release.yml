@@ -51,6 +51,6 @@ jobs:
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           MODRINTH_PROJECT_ID: ${{ secrets.MODRINTH_PROJECT_ID }}
-      - run: gh release create "${GITHUB_REF_NAME}" build/libs/mBadges-1.0.0.jar api/build/libs/mBadges-API-1.0.0.jar --title "${GITHUB_REF_NAME}" --notes-file CHANGELOG.md
+      - run: gh release create "${GITHUB_REF_NAME}" build/libs/mBadges-1.0.1.jar api/build/libs/mBadges-API-1.0.1.jar --title "${GITHUB_REF_NAME}" --notes-file CHANGELOG.md
         env:
           GH_TOKEN: ${{ github.token }}
