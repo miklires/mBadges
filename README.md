@@ -39,7 +39,7 @@ PlaceholderAPI, LuckPerms, Oraxen, and ItemsAdder are optional. mBadges also wor
 
 ## Install
 
-1. Download `mBadges-1.0.0.jar` and place it in the server's `plugins` directory.
+1. Download `mBadges-1.0.1.jar` and place it in the server's `plugins` directory.
 2. Start and stop the server once to create `plugins/mBadges`.
 3. Add badge PNG files and definitions as described below.
 4. Start the server and run `/mbadge resourcepack rebuild`.
@@ -170,7 +170,7 @@ mBadges uses [bStats plugin ID 33353](https://bstats.org/plugin/bukkit/mBadges/3
 
 Artifacts:
 
-- `build/libs/mBadges-1.0.0.jar`
-- `api/build/libs/mBadges-API-1.0.0.jar`
+- `build/libs/mBadges-1.0.1.jar`
+- `api/build/libs/mBadges-API-1.0.1.jar`
 
 The project is licensed under the MIT License.
