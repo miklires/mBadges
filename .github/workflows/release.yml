@@ -18,7 +18,7 @@ jobs:
           distribution: temurin
           java-version: '25'
       - uses: gradle/actions/setup-gradle@v6
-      - run: ./gradlew clean build :api:build --no-daemon
+      - run: chmod +x gradlew && ./gradlew clean build :api:build --no-daemon
       - name: Verify and update Modrinth project
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -51,6 +51,8 @@ jobs:
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           MODRINTH_PROJECT_ID: ${{ secrets.MODRINTH_PROJECT_ID }}
-      - run: gh release upload v1.0.2 build/libs/mBadges-1.0.2.jar api/build/libs/mBadges-API-1.0.2.jar --clobber
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            build/libs/mBadges-1.0.2.jar
+            api/build/libs/mBadges-API-1.0.2.jar
