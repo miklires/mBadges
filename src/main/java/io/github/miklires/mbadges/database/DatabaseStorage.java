@@ -122,11 +122,7 @@ public final class DatabaseStorage implements AutoCloseable {
             ownedQuery.setString(1, playerId.toString());
             try (ResultSet result = ownedQuery.executeQuery()) {
                 while (result.next()) {
-                    long expiry = result.getLong("expires_at");
-                    owned.add(new OwnedBadge(playerId, result.getString("badge_id"),
-                            Instant.ofEpochMilli(result.getLong("obtained_at")),
-                            result.wasNull() ? null : Instant.ofEpochMilli(expiry),
-                            result.getString("source"), result.getString("metadata")));
+                    owned.add(DatabaseRowMapper.ownedBadge(result, playerId));
                 }
             }
             equippedQuery.setString(1, playerId.toString());
